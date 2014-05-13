@@ -22,7 +22,7 @@ let main argv =
     let email = SendGrid.GetInstance()
     email.AddTo(from)  // SmtpapiのSetTo()を使用しているため、実際にはこのアドレスにはメールは送信されない
     email.From <- new MailAddress(from, "送信者名")
-    email.Subject <- "[sendgrid-c#-example] フクロウのお名前はfullnameさん"
+    email.Subject <- "[sendgrid-f#-example] フクロウのお名前はfullnameさん"
     email.Text <- "familyname さんは何をしていますか？\r\n 彼はplaceにいます。"
     email.Html <- "<strong> familyname さんは何をしていますか？</strong><br />彼はplaceにいます。"
     email.Headers.Add("X-Smtpapi", smtpapi.JsonString())
