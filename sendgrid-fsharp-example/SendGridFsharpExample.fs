@@ -1,7 +1,7 @@
 ﻿open System.Net
 open System.Net.Mail
 open System.Configuration
-open SendGridMail
+open SendGrid
 
 [<EntryPoint>]
 let main argv = 
@@ -10,7 +10,7 @@ let main argv =
     let tos = ConfigurationManager.AppSettings.Item("TOS").Split(',')
     let from = ConfigurationManager.AppSettings.Item("FROM")
 
-    let smtpapi = new Smtpapi.Header()
+    let smtpapi = new SendGrid.SmtpApi.Header()
     smtpapi.SetTo(tos)
     smtpapi.AddSubstitution("fullname", [| "田中 太郎"; "佐藤 次郎"; "鈴木 三郎" |])
     smtpapi.AddSubstitution("familyname", [| "田中"; "佐藤"; "鈴木" |])
@@ -19,7 +19,7 @@ let main argv =
     smtpapi.AddSection("home", "目黒")
     smtpapi.SetCategory("カテゴリ1")
 
-    let email = SendGrid.GetInstance()
+    let email = new SendGrid.SendGridMessage()
     email.AddTo(from)  // SmtpapiのSetTo()を使用しているため、実際にはこのアドレスにはメールは送信されない
     email.From <- new MailAddress(from, "送信者名")
     email.Subject <- "[sendgrid-f#-example] フクロウのお名前はfullnameさん"
@@ -29,7 +29,7 @@ let main argv =
     email.AddAttachment(@"..\..\gif.gif")
 
     let credentials = new NetworkCredential(sendGridUserName, sendGridPassword)
-    let web = Web.GetInstance(credentials)
+    let web = new Web(credentials)
     web.Deliver(email)
 
     0 // 整数の終了コードを返します
